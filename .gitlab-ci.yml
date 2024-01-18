@@ -20,3 +20,28 @@ test:
   stage: test
   script:
     - echo "This is a test step"
+
+odc-backend:
+  stage: test
+  image: gitlab/dind:latest
+  script:
+    - chmod +x ./run-depcheck.sh
+    - ./run-depcheck.sh
+  artifacts:
+    paths:
+      - reports/dependency-check-report.json
+    when: always
+    expire_in: one week
+
+integration:
+  stage: integration
+  script:
+    - echo "This is an integration step"
+    - exit 1
+  allow_failure: true # Even if the job fails, continue to the next stages
+
+prod:
+  stage: prod
+  script:
+    - echo "This is a deploy step."
+  when: manual # Continuous Delivery
